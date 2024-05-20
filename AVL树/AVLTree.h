@@ -80,7 +80,7 @@ public:
 	//循环更新平衡因子
 	while ()
 	{
-		if (cur == parent->_left)//若新插入的结点是父结点的左结点，则父结点的平衡因子--
+		if (cur == parent->_left)//若新插入的结点是父结点的左结点，则父结点的平衡因子++
 		{
 			parent->_bf--;
 		}
