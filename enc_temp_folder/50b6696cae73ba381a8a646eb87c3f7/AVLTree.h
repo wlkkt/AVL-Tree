@@ -386,6 +386,6 @@ void TestAVLTree1()
 		t1.Insert({ e,e });
 	}
 
-	t1.InOrder();
-	cout << t1.IsBalance() << endl;
+	/*t1.InOrder();
+	cout << t1.IsBalance() << endl;*/
 }

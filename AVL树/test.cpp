@@ -2,7 +2,6 @@
 
 int main()
 {
-
-	
+	TestAVLTree1();
 	return 0;
 }

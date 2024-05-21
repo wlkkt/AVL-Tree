@@ -241,7 +241,7 @@ public:
 		//这里的subL和subLR的仅用于修改父亲和爷爷结点的bf
 		Node* subL = parent->_left;
 		Node* subLR = subL->_right;
- 		int bf = subLR->_bf;
+		int bf = subLR->_bf;
 
 		RotateL(subL);
 		RotateR(parent);
