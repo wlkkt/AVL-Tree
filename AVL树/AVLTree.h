@@ -85,11 +85,11 @@ public:
 		{
 			if (cur == parent->_left)
 			{
-				parent->_bf--;
+				parent->_bf++;
 			}
 			else
 			{
-				parent->_bf++;
+				parent->_bf--;
 			}
 
 
@@ -113,7 +113,8 @@ public:
 				}
 				else if (parent->_bf == 2 && cur->_bf == -1)
 				{
-					RotateLR(parent);//2 + -1 == LR左右旋
+					//RotateLR(parent);//2 + -1 == LR左右旋
+					continue;
 				}
 				else if (parent->_bf == -2 && cur->_bf == -1)
 				{
@@ -129,6 +130,7 @@ public:
 			else
 			{
 				// 理论而言不可能出现这个情况
+				std::cout << "bf != 0、-1、1、-2、2" << std::endl;
 				assert(false);
 			}
 		}
@@ -155,6 +157,73 @@ public:
 		}
 		return nullptr;
 	}
+
+	//RR左旋
+	void RotateL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+
+		parent->_right = subRL;
+		if (subRL)
+			subRL->_parent = parent;
+
+		subR->_left = parent;
+		Node* ppNode = parent->_parent;
+
+		parent->_parent = subR;
+
+		if (parent == _root)
+		{
+			_root = subR;
+			_root->_parent = nullptr;
+		}
+		else
+		{
+			if (ppNode->_right == parent)
+			{
+				ppNode->_right = subR;
+			}
+			else
+			{
+				ppNode->_left = subR;
+			}
+			subR->_parent = ppNode;
+		}
+
+		parent->_bf = subR->_bf = 0;
+	}
+
+
+	void RotateLR(Node* parent)
+{
+	//这里的subL和subLR的仅用于修改父亲和爷爷结点的bf
+	Node* subL = parent->_left;
+	Node* subLR = subL->_right;
+		int bf = subLR->_bf;
+
+   	RotateL(subL);
+   	RotateR(parent);
+
+   	subLR->_bf = 0;//旋转完后subLR指向的结点的bf为0
+
+   	if (bf == 1)
+   	{
+   		parent->_bf = -1;
+   		subL->_bf = 0;
+   	}
+   	else if (bf == -1)
+   	{
+   		parent->_bf = 0;
+   		subL->_bf = 1;
+   	}
+   	{
+   		parent->_bf = 0;
+   		subL->_bf = 0;
+   	}
+   }
+   
+
 
 	//LL右旋
 	//右旋完全版（parent指向的结点可能不是初始根节点）
@@ -200,71 +269,7 @@ public:
 		parent->_bf = subL->_bf = 0;//更新平衡因子
 	}
 
-	//RR左旋
-	void RotateL(Node* parent)
-	{
-		Node* subR = parent->_right;
-		Node* subRL = subR->_left;
-
-		parent->_right = subRL;
-		if (subRL)
-			subRL->_parent = parent;
-
-		subR->_left = parent;
-		Node* ppNode = parent->_parent;
-
-		parent->_parent = subR;
-
-		if (parent == _root)
-		{
-			_root = subR;
-			_root->_parent = nullptr;
-		}
-		else
-		{
-			if (ppNode->_right == parent)
-			{
-				ppNode->_right = subR;
-			}
-			else
-			{
-				ppNode->_left = subR;
-			}
-			subR->_parent = ppNode;
-		}
-
-		parent->_bf = subR->_bf = 0;
-	}
-
-	void RotateLR(Node* parent)
-	{
-		//这里的subL和subLR的仅用于修改父亲和爷爷结点的bf
-		Node* subL = parent->_left;
-		Node* subLR = subL->_right;
- 		int bf = subLR->_bf;
-
-		RotateL(subL);
-		RotateR(parent);
-
-		subLR->_bf = 0;//旋转完后subLR指向的结点的bf为0
-
-		if (bf == 1)
-		{
-			parent->_bf = -1;
-			subL->_bf = 0;
-		}
-		else if (bf == -1)
-		{
-			parent->_bf = 0;
-			subL->_bf = 1;
-		}
-		{
-			parent->_bf = 0;
-			subL->_bf = 0;
-		}
-	}
-	
-	
+		
 	void RotateRL(Node* parent)
 	{
 		Node* subR = parent->_right;
@@ -379,7 +384,7 @@ private:
 
 void TestAVLTree1()
 {
-	int a[] = { 4, 2, 6, 1, 3, 5, 15, 7, 16, 14 };
+	int a[] = { 4, 2, 6, 1, 3, 5, 15, 7,16,14 };//插入14的时候出错了
 	AVLTree<int, int> t1;
 	for (auto e : a)
 	{
